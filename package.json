@@ -8,7 +8,7 @@
     "start": "node src/server.mjs",
     "dev": "node --watch src/server.mjs",
     "test": "node --test",
-    "check": "node --check src/server.mjs && node --check public/app.js && node --check public/vault.js && node --check public/study-core.js"
+    "check": "node --check src/server.mjs && node --check public/app.js && node --check public/vault.js && node --check public/study-core.js && node --check public/sw.js && node --check tests/study-core.test.mjs && node --check tests/ui-contract.test.mjs"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
