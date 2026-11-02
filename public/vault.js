@@ -1,3 +1,5 @@
+import { nextReviewAt, sumFocusMinutes } from "./study-core.js";
+
 const VAULT_KEY = "jarvis-study.vault.v1";
 const MAIN_KEY = "jarvis-study.workspace.v1";
 const REVIEW_INTERVALS = [1, 3, 7, 14, 30, 60];
@@ -254,24 +256,11 @@ $("#reviewActions").addEventListener("click", (event) => {
   const grade = button.dataset.grade;
   if (!["again", "good", "easy"].includes(grade)) return;
   const now = new Date();
-  let nextIndex = Number(card.intervalIndex) || 0;
-  let days;
-  if (grade === "again") {
-    nextIndex = 0;
-    days = REVIEW_INTERVALS[0];
-  } else if (grade === "good") {
-    nextIndex = Math.min(REVIEW_INTERVALS.length - 1, nextIndex + 1);
-    days = REVIEW_INTERVALS[nextIndex];
-  } else {
-    nextIndex = Math.min(REVIEW_INTERVALS.length - 1, nextIndex + 2);
-    days = REVIEW_INTERVALS[nextIndex];
-  }
-  const due = new Date(now);
-  due.setDate(due.getDate() + days);
-  card.intervalIndex = nextIndex;
+  const schedule = nextReviewAt(grade, card.intervalIndex, now);
+  card.intervalIndex = schedule.intervalIndex;
   card.reviews = (Number(card.reviews) || 0) + 1;
   card.lastReviewedAt = now.toISOString();
-  card.dueAt = due.toISOString();
+  card.dueAt = schedule.dueAt;
   activeReviewId = dueCards().find((item) => item.id !== card.id)?.id || null;
   showingAnswer = false;
   saveVault();
@@ -294,11 +283,7 @@ function renderWeeklyGoal() {
   start.setDate(start.getDate() - 6);
   const workspace = getMainWorkspace();
   const sessions = Array.isArray(workspace.sessions) ? workspace.sessions : [];
-  const minutes = sessions.filter((session) => {
-    if (!session || session.mode !== "focus") return false;
-    const date = safeDate(session.completedAt);
-    return date && date >= start && date <= new Date();
-  }).reduce((sum, session) => sum + Math.max(0, Number(session.minutes) || 0), 0);
+  const minutes = sumFocusMinutes(sessions, start, new Date());
   $("#weeklyMinutes").innerHTML = minutes + " <small>min</small>";
   $("#weeklyGoalLabel").textContent = "of " + goal + " min";
   $("#weeklyGoalProgress").style.width = Math.min(100, (minutes / goal) * 100) + "%";
