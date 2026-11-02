@@ -3,51 +3,247 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>JARVIS-Study</title>
+    <meta name="theme-color" content="#080d18" />
+    <meta name="description" content="JARVIS-Study is a focused AI study workspace with planning, focus sessions, progress tracking, and a permission-aware assistant." />
+    <title>JARVIS-Study — Your learning workspace</title>
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/vault.css" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
   </head>
   <body>
-    <main class="shell">
-      <header class="topbar">
-        <div>
-          <div class="eyebrow">STUDENT EDITION</div>
-          <h1>JARVIS<span>-Study</span></h1>
-          <p class="subtitle">A focused AI copilot for learning, research, and carefully approved actions.</p>
-        </div>
-        <div class="status" id="status">Checking systems…</div>
-      </header>
+    <div class="app-layout">
+      <aside class="sidebar">
+        <a class="brand" href="#overview" aria-label="JARVIS-Study home" data-view="overview">
+          <span class="brand-mark">J</span>
+          <span class="brand-copy"><strong>JARVIS</strong><small>STUDY WORKSPACE</small></span>
+        </a>
 
-      <section class="card chat-card" aria-label="Chat with JARVIS-Study">
-        <div class="messages" id="messages"></div>
-        <div class="quick-actions" aria-label="Quick prompts">
-          <button data-prompt="Help me understand a difficult topic with an example and a mini quiz.">Explain a topic</button>
-          <button data-prompt="Search the web for three reliable sources about renewable energy for a school project.">Research mode</button>
-          <button data-prompt="Review the latest files in my GitHub repository and summarize what I should learn next.">GitHub review</button>
+        <div class="nav-section-label">WORKSPACE</div>
+        <nav class="side-nav" aria-label="Main navigation">
+          <button class="nav-item active" data-view="overview"><span class="nav-icon">◫</span><span>Overview</span></button>
+          <button class="nav-item" data-view="planner"><span class="nav-icon">▤</span><span>Study planner</span><span class="nav-count" id="navTaskCount">0</span></button>
+          <button class="nav-item" data-view="focus"><span class="nav-icon">◷</span><span>Focus room</span></button>
+          <button class="nav-item" data-view="progress"><span class="nav-icon">↗</span><span>Progress</span></button>
+          <button class="nav-item" data-view="vault"><span class="nav-icon">▧</span><span>Knowledge vault</span><span class="nav-count" id="navDueCount">0</span></button>
+          <button class="nav-item" data-view="assistant"><span class="nav-icon">✳</span><span>JARVIS assistant</span><span class="nav-live"></span></button>
+        </nav>
+
+        <div class="sidebar-spacer"></div>
+        <div class="privacy-card">
+          <span class="privacy-icon">⌁</span>
+          <strong>Your workspace stays yours</strong>
+          <p>Plans and focus history are saved in this browser. AI requests use your configured server.</p>
+          <span class="local-status"><i></i> Local workspace</span>
         </div>
-        <form class="composer" id="composer">
-          <textarea id="prompt" rows="2" placeholder="Ask JARVIS-Study anything…" autocomplete="off"></textarea>
-          <div class="composer-actions">
-            <button class="secondary" id="mic" type="button" title="Use voice input">🎙 Voice</button>
-            <button class="primary" type="submit">Send</button>
+        <div class="sidebar-footer">JARVIS-STUDY <span>•</span> STUDENT EDITION</div>
+      </aside>
+
+      <div class="main-shell">
+        <header class="topbar">
+          <div class="topbar-heading">
+            <div class="eyebrow" id="pageEyebrow">YOUR PERSONAL LEARNING SPACE</div>
+            <h1 id="pageTitle">Good to see you.</h1>
+            <p id="pageDescription">A little progress every day adds up. What will you work on?</p>
           </div>
-        </form>
-        <p class="notice">For safety, GitHub publishing always pauses for your confirmation. Never paste secrets into chat.</p>
-      </section>
+          <div class="topbar-actions">
+            <div class="system-status" id="status"><i></i><span>Connecting…</span></div>
+            <button class="topbar-focus" data-view="focus"><span>＋</span> Start focus</button>
+          </div>
+        </header>
 
-      <section class="grid">
-        <div class="card info-card">
-          <div class="card-kicker">STUDY MODE</div>
-          <h2>Learn, don’t just copy.</h2>
-          <p>JARVIS-Study is tuned to explain ideas, show worked examples, and help you check your own understanding.</p>
-        </div>
-        <div class="card info-card">
-          <div class="card-kicker">ACCESS MODEL</div>
-          <h2>Small permissions, clear approvals.</h2>
-          <p>Browser access is limited to public HTTPS hosts. GitHub uses your own token, and write actions require a second confirmation.</p>
-        </div>
-      </section>
-    </main>
+        <main class="content">
+          <section class="view active" id="view-overview" aria-labelledby="pageTitle">
+            <div class="welcome-banner">
+              <div class="welcome-copy">
+                <div class="banner-kicker"><span class="sparkle">✦</span> YOUR STUDY COMMAND CENTER</div>
+                <h2>Build momentum.<br /><span>One session at a time.</span></h2>
+                <p>Plan your next move, protect your focus, and make your progress visible.</p>
+                <div class="banner-actions">
+                  <button class="button button-light" id="overviewStartFocus">Start a focus session <span>↗</span></button>
+                  <button class="button button-quiet" id="overviewAddTask">＋ Add a task</button>
+                </div>
+              </div>
+              <div class="banner-art" aria-hidden="true">
+                <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+                <div class="orbit-core"><span>J</span></div>
+                <div class="orbit-dot dot-one"></div><div class="orbit-dot dot-two"></div><div class="orbit-dot dot-three"></div>
+              </div>
+              <div class="banner-caption">LEARN WITH INTENTION <span>•</span> GROW WITH CONSISTENCY</div>
+            </div>
+
+            <div class="section-heading metrics-heading"><div><span class="section-kicker">AT A GLANCE</span><h2>Your momentum</h2></div><span class="date-chip" id="todayLabel"></span></div>
+            <div class="metrics-grid">
+              <article class="metric-card"><div class="metric-top"><span class="metric-icon cyan">▤</span><span class="metric-label">OPEN TASKS</span></div><strong class="metric-value" id="metricTasks">0</strong><span class="metric-foot">Tasks on your list</span></article>
+              <article class="metric-card"><div class="metric-top"><span class="metric-icon violet">◷</span><span class="metric-label">FOCUS TODAY</span></div><strong class="metric-value" id="metricFocus">0 <small>min</small></strong><span class="metric-foot">Time spent learning today</span></article>
+              <article class="metric-card"><div class="metric-top"><span class="metric-icon amber">✦</span><span class="metric-label">STUDY STREAK</span></div><strong class="metric-value" id="metricStreak">0 <small>days</small></strong><span class="metric-foot">Consecutive days with focus</span></article>
+              <article class="metric-card"><div class="metric-top"><span class="metric-icon green">✓</span><span class="metric-label">TASKS COMPLETED</span></div><strong class="metric-value" id="metricCompleted">0</strong><span class="metric-foot">Small wins count</span></article>
+            </div>
+
+            <div class="overview-grid">
+              <section class="panel today-panel">
+                <div class="panel-heading"><div><span class="section-kicker">YOUR NEXT STEPS</span><h2>Today's plan</h2></div><button class="text-link" data-view="planner">View planner <span>→</span></button></div>
+                <div id="overviewTasks" class="task-list compact-list"></div>
+                <div id="overviewEmpty" class="empty-state"><span>✧</span><strong>Your day is open.</strong><p>Add a task to give your next study session a direction.</p><button class="button button-outline" data-view="planner">Create your first task</button></div>
+              </section>
+              <section class="panel focus-summary">
+                <div class="panel-heading"><div><span class="section-kicker">MAKE SPACE TO THINK</span><h2>Focus room</h2></div><span class="live-pill"><i></i> READY</span></div>
+                <div class="mini-timer"><div class="mini-timer-ring"><span>◷</span></div><div><strong>25:00</strong><small>MINUTES OF DEEP WORK</small></div></div>
+                <p class="focus-summary-copy">One distraction-free session can move a difficult topic forward.</p>
+                <button class="button button-primary full-button" id="overviewFocusButton">Open focus room <span>↗</span></button>
+              </section>
+            </div>
+          </section>
+
+          <section class="view" id="view-planner">
+            <div class="page-intro"><div><span class="section-kicker">TURN INTENTION INTO ACTION</span><h2>Study planner</h2><p>Keep your next steps clear, realistic, and organised.</p></div><span class="page-icon">▤</span></div>
+            <div class="planner-layout">
+              <section class="panel task-form-panel">
+                <div class="panel-heading"><div><span class="section-kicker">MAKE A PLAN</span><h2>Add a study task</h2></div></div>
+                <form id="taskForm" class="task-form">
+                  <label class="field-label" for="taskTitle">What do you need to work on?</label>
+                  <input id="taskTitle" name="title" maxlength="100" placeholder="e.g. Revise applications of derivatives" required />
+                  <div class="field-row">
+                    <div class="field-group"><label class="field-label" for="taskSubject">Subject</label><input id="taskSubject" name="subject" maxlength="40" placeholder="Mathematics" /></div>
+                    <div class="field-group"><label class="field-label" for="taskDue">Target date</label><input id="taskDue" name="dueDate" type="date" /></div>
+                  </div>
+                  <div class="field-row">
+                    <div class="field-group"><label class="field-label" for="taskDuration">Estimated time</label><select id="taskDuration" name="minutes"><option value="15">15 minutes</option><option value="25" selected>25 minutes</option><option value="45">45 minutes</option><option value="60">1 hour</option><option value="90">90 minutes</option></select></div>
+                    <div class="field-group"><label class="field-label" for="taskPriority">Priority</label><select id="taskPriority" name="priority"><option value="normal">Normal</option><option value="high">High</option><option value="low">Low</option></select></div>
+                  </div>
+                  <button class="button button-primary full-button" type="submit">＋ Add to my plan</button>
+                  <p class="form-note">Your tasks are stored on this device, not sent to the AI.</p>
+                </form>
+              </section>
+              <section class="panel planner-list-panel">
+                <div class="panel-heading"><div><span class="section-kicker">YOUR WORKLOAD</span><h2>All tasks</h2></div><span class="count-chip" id="plannerCount">0 tasks</span></div>
+                <div class="filter-tabs" role="group" aria-label="Filter tasks">
+                  <button class="filter-tab active" data-filter="all">All</button>
+                  <button class="filter-tab" data-filter="open">To do</button>
+                  <button class="filter-tab" data-filter="completed">Completed</button>
+                </div>
+                <div id="taskList" class="task-list"></div>
+                <div id="plannerEmpty" class="empty-state small-empty"><span>✧</span><strong>No tasks here yet.</strong><p>Add a task and your plan will appear here.</p></div>
+              </section>
+            </div>
+          </section>
+
+          <section class="view" id="view-focus">
+            <div class="page-intro"><div><span class="section-kicker">PROTECT YOUR ATTENTION</span><h2>Focus room</h2><p>Choose a session, put distractions aside, and work at your own pace.</p></div><span class="page-icon">◷</span></div>
+            <div class="focus-layout">
+              <section class="panel focus-timer-panel">
+                <div class="focus-mode-label"><span class="live-dot"></span><span id="timerModeLabel">FOCUS SESSION</span></div>
+                <div class="timer-ring" id="timerRing"><div class="timer-ring-inner"><span id="timerDisplay">25:00</span><small id="timerSubLabel">TIME TO FOCUS</small></div></div>
+                <div class="timer-presets" role="group" aria-label="Timer duration">
+                  <button class="preset active" data-mode="focus">Focus <small>25 min</small></button>
+                  <button class="preset" data-mode="short">Short break <small>5 min</small></button>
+                  <button class="preset" data-mode="long">Long break <small>15 min</small></button>
+                </div>
+                <div class="timer-controls"><button class="button button-primary" id="timerStartPause">Start focus</button><button class="button button-outline" id="timerReset">Reset</button></div>
+                <p class="timer-hint" id="timerHint">A focused 25 minutes. You can pause or reset at any time.</p>
+              </section>
+              <aside class="focus-side-column">
+                <section class="panel focus-subject-panel"><span class="section-kicker">SESSION CONTEXT</span><h3>What are you working on?</h3><label class="field-label" for="focusSubject">Subject or topic</label><input id="focusSubject" maxlength="60" placeholder="e.g. Physics — electrostatics" /><p>Your session is saved to your local progress history when the focus timer completes.</p></section>
+                <section class="panel focus-tip-panel"><span class="tip-icon">✦</span><span class="section-kicker">A SMALL REMINDER</span><h3>Make the next step tiny.</h3><p>Write down one specific thing you want to understand before the timer starts. Clarity makes it easier to begin.</p></section>
+              </aside>
+            </div>
+          </section>
+
+          <section class="view" id="view-progress">
+            <div class="page-intro"><div><span class="section-kicker">NOTICE THE WORK YOU PUT IN</span><h2>Your progress</h2><p>Build a learning habit by paying attention to consistency, not perfection.</p></div><span class="page-icon">↗</span></div>
+            <div class="progress-summary-grid">
+              <article class="metric-card"><span class="metric-label">TOTAL FOCUS TIME</span><strong class="metric-value" id="progressTotal">0 <small>min</small></strong><span class="metric-foot">Across completed focus sessions</span></article>
+              <article class="metric-card"><span class="metric-label">COMPLETED SESSIONS</span><strong class="metric-value" id="progressSessions">0</strong><span class="metric-foot">Every session is a step forward</span></article>
+              <article class="metric-card"><span class="metric-label">COMPLETED TASKS</span><strong class="metric-value" id="progressTasks">0</strong><span class="metric-foot">From your personal planner</span></article>
+            </div>
+            <div class="progress-layout">
+              <section class="panel chart-panel"><div class="panel-heading"><div><span class="section-kicker">LAST SEVEN DAYS</span><h2>Focus activity</h2></div><span class="chart-unit">MINUTES</span></div><div class="weekly-chart" id="weeklyChart"></div></section>
+              <section class="panel subject-panel"><div class="panel-heading"><div><span class="section-kicker">WHERE TIME GOES</span><h2>By subject</h2></div></div><div id="subjectBreakdown" class="subject-breakdown"></div><div id="subjectEmpty" class="empty-state small-empty"><span>✧</span><strong>No sessions yet.</strong><p>Complete a focus session to start your history.</p></div></section>
+            </div>
+            <section class="panel recent-panel"><div class="panel-heading"><div><span class="section-kicker">YOUR RECENT WORK</span><h2>Session history</h2></div></div><div id="recentSessions" class="session-list"></div><div id="sessionsEmpty" class="empty-inline">Completed focus sessions will appear here.</div></section>
+            <p class="privacy-note">Progress is calculated from sessions and tasks saved in this browser. Clearing site data will clear this history.</p>
+          </section>
+
+          <section class="view" id="view-vault">
+            <div class="page-intro"><div><span class="section-kicker">YOUR PERSONAL KNOWLEDGE BASE</span><h2>Knowledge vault</h2><p>Capture useful ideas, turn them into flashcards, and review them before they fade.</p></div><span class="page-icon">▧</span></div>
+            <div class="vault-overview-grid">
+              <section class="panel weekly-goal-panel">
+                <div class="panel-heading"><div><span class="section-kicker">CONSISTENCY BUILDS MASTERY</span><h2>Weekly focus goal</h2></div><span class="goal-icon">◎</span></div>
+                <div class="goal-row"><strong id="weeklyMinutes">0 <small>min</small></strong><span id="weeklyGoalLabel">of 300 min</span></div>
+                <div class="goal-track"><div class="goal-progress" id="weeklyGoalProgress"></div></div>
+                <div class="goal-controls"><label class="field-label" for="weeklyGoalSelect">Set your weekly target</label><select id="weeklyGoalSelect"><option value="60">1 hour</option><option value="120">2 hours</option><option value="180">3 hours</option><option value="300" selected>5 hours</option><option value="450">7.5 hours</option><option value="600">10 hours</option></select></div>
+                <p class="vault-helper">Based on completed focus sessions from the last seven days.</p>
+              </section>
+              <section class="panel backup-panel">
+                <div class="panel-heading"><div><span class="section-kicker">YOUR DATA, YOUR CONTROL</span><h2>Workspace backup</h2></div><span class="backup-icon">⌁</span></div>
+                <p>Export your tasks, focus history, notes, flashcards, and settings to a JSON backup. Restore it on this browser later.</p>
+                <div class="backup-actions"><button class="button button-primary" id="exportBackup">↓ Export backup</button><label class="button button-outline" for="importBackupFile">↑ Import backup</label><input id="importBackupFile" type="file" accept="application/json,.json" hidden /></div>
+                <span class="backup-status" id="backupStatus" aria-live="polite">Backups are created locally. Nothing is uploaded.</span>
+              </section>
+            </div>
+            <div class="vault-grid">
+              <section class="panel vault-notes-panel">
+                <div class="panel-heading"><div><span class="section-kicker">CAPTURE WHAT MATTERS</span><h2>Study notes</h2></div><span class="count-chip" id="noteCount">0 notes</span></div>
+                <form id="noteForm" class="vault-form">
+                  <input id="noteTitle" maxlength="90" placeholder="Note title — e.g. Derivative rules" aria-label="Note title" required />
+                  <input id="noteSubject" maxlength="35" placeholder="Subject or tag — e.g. Mathematics" aria-label="Note subject" />
+                  <textarea id="noteBody" rows="4" maxlength="8000" placeholder="Write a definition, worked example, key idea, or question to revisit…" aria-label="Note content" required></textarea>
+                  <div class="vault-form-actions"><button class="button button-primary" id="saveNoteButton" type="submit">Save note</button><button class="button button-outline" id="cancelNoteEdit" type="button" hidden>Cancel edit</button></div>
+                </form>
+                <div class="vault-search"><input id="noteSearch" type="search" placeholder="Search your notes…" aria-label="Search notes" /></div>
+                <div id="noteList" class="note-list"></div>
+                <div id="notesEmpty" class="empty-state small-empty"><span>✧</span><strong>Your knowledge starts here.</strong><p>Save a useful explanation or a question you want to remember.</p></div>
+              </section>
+              <section class="panel vault-cards-panel">
+                <div class="panel-heading"><div><span class="section-kicker">ACTIVE RECALL</span><h2>Flashcards</h2></div><span class="count-chip" id="cardCount">0 cards</span></div>
+                <form id="cardForm" class="vault-form">
+                  <input id="cardQuestion" maxlength="180" placeholder="Front — ask yourself a question" aria-label="Flashcard question" required />
+                  <textarea id="cardAnswer" rows="3" maxlength="1500" placeholder="Back — write the answer in your own words" aria-label="Flashcard answer" required></textarea>
+                  <input id="cardSubject" maxlength="35" placeholder="Subject or topic (optional)" aria-label="Flashcard subject" />
+                  <button class="button button-primary" type="submit">＋ Create flashcard</button>
+                </form>
+                <div class="review-heading"><div><span class="section-kicker">SPACED REVIEW</span><strong>Review queue</strong></div><span class="due-chip" id="dueCount">0 due</span></div>
+                <div class="review-card" id="reviewCard">
+                  <span class="review-label" id="reviewSideLabel">QUESTION</span>
+                  <p id="reviewCardText">Create a flashcard to start building your review queue.</p>
+                  <button class="text-link" id="flipCardButton" type="button" hidden>Reveal answer</button>
+                  <div class="review-actions" id="reviewActions" hidden>
+                    <button class="review-grade again" data-grade="again" type="button">Again <small>1 day</small></button>
+                    <button class="review-grade good" data-grade="good" type="button">Good <small>Next interval</small></button>
+                    <button class="review-grade easy" data-grade="easy" type="button">Easy <small>Longer interval</small></button>
+                  </div>
+                </div>
+                <div id="flashcardList" class="flashcard-list"></div>
+                <div id="cardsEmpty" class="empty-state small-empty"><span>✧</span><strong>No flashcards yet.</strong><p>Create a question and answer, then practise active recall.</p></div>
+                <p class="vault-helper">Intervals are scheduled locally (1, 3, 7, 14 and 30 days). This is a lightweight review aid, not a clinical or guaranteed memory model.</p>
+              </section>
+            </div>
+          </section>
+
+          <section class="view" id="view-assistant">
+            <div class="page-intro"><div><span class="section-kicker">YOUR AI LEARNING PARTNER</span><h2>JARVIS assistant</h2><p>Ask questions, explore ideas, research topics, or inspect a GitHub project.</p></div><span class="page-icon">✳</span></div>
+            <section class="panel chat-panel" aria-label="Chat with JARVIS-Study">
+              <div class="chat-topline"><div class="assistant-avatar">J</div><div><strong>JARVIS</strong><span>Learning and research assistant</span></div><span class="chat-secure">GUARDED TOOLS</span></div>
+              <div class="messages" id="messages" aria-live="polite"></div>
+              <div class="quick-actions" aria-label="Quick prompts">
+                <button data-prompt="Help me understand a difficult topic step by step, with a worked example and a short quiz.">Explain a topic</button>
+                <button data-prompt="Research a school topic using reliable sources. Summarise the key findings and cite the sources.">Research mode</button>
+                <button data-prompt="Help me make a realistic 7-day study plan based on my available time and subjects. Ask for missing details first.">Build a study plan</button>
+                <button data-prompt="Review the latest files in my GitHub repository and summarise what I should learn next.">GitHub review</button>
+              </div>
+              <form class="composer" id="composer">
+                <textarea id="prompt" rows="2" maxlength="12000" placeholder="Message JARVIS… Ask, learn, or explore." autocomplete="off"></textarea>
+                <div class="composer-actions"><button class="button button-outline" id="mic" type="button" title="Use voice input">♩ Voice</button><button class="button button-primary" id="sendButton" type="submit">Send <span>↗</span></button></div>
+              </form>
+              <p class="notice">Never paste passwords, API keys, or private personal information into chat. GitHub publishing always requires a separate review and confirmation.</p>
+            </section>
+          </section>
+        </main>
+
+        <footer class="app-footer"><span>JARVIS-STUDY <b>•</b> BUILT FOR CURIOUS MINDS</span><span>LOCAL-FIRST <i></i> LEARNING WORKSPACE</span></footer>
+      </div>
+    </div>
     <script src="/app.js" type="module"></script>
+    <script src="/vault.js" type="module"></script>
   </body>
 </html>
-
