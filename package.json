@@ -6,7 +6,9 @@
   "description": "A local, permission-aware Jarvis-style study assistant for students.",
   "scripts": {
     "start": "node src/server.mjs",
-    "dev": "node --watch src/server.mjs"
+    "dev": "node --watch src/server.mjs",
+    "test": "node --test",
+    "check": "node --check src/server.mjs && node --check public/app.js && node --check public/vault.js && node --check public/study-core.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
@@ -14,4 +16,3 @@
     "openai": "^6.9.0"
   }
 }
-
