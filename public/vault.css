@@ -1,0 +1,57 @@
+/* Knowledge Vault */
+.vault-overview-grid { display:grid; grid-template-columns:1.1fr 1fr; gap:14px; margin-bottom:14px; }
+.weekly-goal-panel,.backup-panel,.vault-notes-panel,.vault-cards-panel { padding:19px; }
+.goal-icon,.backup-icon { display:grid; place-items:center; width:30px; height:30px; border:1px solid var(--line-bright); border-radius:9px; color:var(--cyan); background:rgba(117,213,246,.08); font-size:17px; }
+.goal-row { display:flex; align-items:baseline; gap:9px; margin:14px 0 10px; }
+.goal-row strong { color:#eaf6ff; font-size:28px; letter-spacing:-.05em; }
+.goal-row small { color:#94abc2; font-size:11px; font-weight:500; }
+.goal-row span { color:#7f93ad; font-size:9px; }
+.goal-track { height:8px; overflow:hidden; border-radius:99px; background:rgba(143,167,197,.12); }
+.goal-progress { width:0; height:100%; border-radius:inherit; background:linear-gradient(90deg,#5cb8df,#9b9bff); box-shadow:0 0 14px rgba(117,213,246,.18); transition:width .25s ease; }
+.goal-controls { display:grid; grid-template-columns:1fr 110px; align-items:center; gap:10px; margin-top:13px; }
+.goal-controls .field-label { margin:0; }
+.goal-controls select { min-height:33px; }
+.vault-helper { margin:11px 0 0; color:#71859e; font-size:8px; line-height:1.55; }
+.backup-panel p { max-width:470px; margin:4px 0 15px; color:var(--muted); font-size:10px; line-height:1.65; }
+.backup-actions { display:flex; flex-wrap:wrap; gap:8px; }
+.backup-actions .button { min-height:34px; }
+.backup-status { display:block; min-height:14px; margin-top:10px; color:#8197b0; font-size:8px; line-height:1.5; }
+.backup-status.success { color:var(--green); }
+.backup-status.error { color:var(--danger); }
+.vault-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:start; }
+.vault-form { display:grid; gap:8px; margin-bottom:13px; }
+.vault-form input,.vault-form textarea { padding:10px; font-size:10px; }
+.vault-form textarea { resize:vertical; min-height:77px; line-height:1.55; }
+.vault-form-actions { display:flex; gap:7px; }
+.vault-form-actions .button,.vault-form > .button { min-height:34px; }
+.vault-search { margin:0 0 10px; }
+.vault-search input { min-height:34px; }
+.note-list,.flashcard-list { display:grid; gap:8px; }
+.note-item,.flashcard-item { min-width:0; padding:11px; border:1px solid rgba(156,184,218,.1); border-radius:10px; background:rgba(255,255,255,.018); }
+.note-item-top,.flashcard-item-top { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+.note-item-title,.flashcard-question { overflow-wrap:anywhere; color:#dce8f5; font-size:10px; font-weight:700; }
+.note-item-meta,.flashcard-meta { margin-top:5px; color:#7e91a9; font-size:8px; }
+.note-item-preview { display:-webkit-box; overflow:hidden; margin:7px 0 0; color:#9aacc1; font-size:9px; line-height:1.55; -webkit-line-clamp:3; -webkit-box-orient:vertical; }
+.note-item-actions { display:flex; gap:5px; margin-top:9px; }
+.mini-action { padding:5px 8px; border:1px solid rgba(151,177,208,.15); border-radius:6px; color:#9ab0c8; background:rgba(255,255,255,.025); font-size:8px; }
+.mini-action.delete:hover { color:var(--danger); border-color:rgba(255,144,152,.25); }
+.review-heading { display:flex; justify-content:space-between; align-items:center; gap:8px; margin:15px 0 9px; padding-top:13px; border-top:1px solid var(--line); }
+.review-heading strong { display:block; margin-top:4px; color:#dce8f5; font-size:10px; }
+.due-chip { padding:5px 7px; border:1px solid rgba(126,224,180,.17); border-radius:6px; color:#8fdbb8; background:rgba(126,224,180,.06); font-size:8px; }
+.review-card { min-height:155px; padding:14px; border:1px solid rgba(117,213,246,.2); border-radius:12px; background:radial-gradient(ellipse at 100% 0%,rgba(117,213,246,.08),transparent 50%),rgba(8,15,27,.55); }
+.review-label { color:#83b4c9; font-size:8px; letter-spacing:.16em; font-weight:800; }
+.review-card p { min-height:48px; margin:12px 0 9px; color:#e0edf8; font-size:12px; line-height:1.65; white-space:pre-wrap; overflow-wrap:anywhere; }
+.review-actions { display:flex; gap:6px; margin-top:12px; }
+.review-grade { display:grid; flex:1; gap:3px; padding:8px 5px; border:1px solid rgba(151,177,208,.16); border-radius:8px; color:#c7d7e8; background:rgba(255,255,255,.035); font-size:9px; font-weight:700; }
+.review-grade small { color:#879bb2; font-size:7px; font-weight:500; }
+.review-grade.again { border-color:rgba(255,144,152,.22); }
+.review-grade.good { border-color:rgba(117,213,246,.22); }
+.review-grade.easy { border-color:rgba(126,224,180,.22); }
+.review-grade:hover { background:rgba(255,255,255,.08); }
+.flashcard-item { display:flex; align-items:center; gap:8px; }
+.flashcard-item .flashcard-item-copy { flex:1; min-width:0; }
+.flashcard-item .flashcard-question { display:block; }
+.flashcard-item .flashcard-meta { display:block; }
+.flashcard-item .mini-action { flex:0 0 auto; }
+@media(max-width:900px) { .vault-grid,.vault-overview-grid { grid-template-columns:1fr; } }
+@media(max-width:560px) { .goal-controls { grid-template-columns:1fr; gap:6px; }.goal-controls select { width:100%; }.weekly-goal-panel,.backup-panel,.vault-notes-panel,.vault-cards-panel { padding:15px; }.review-actions { gap:4px; }.review-grade { padding:7px 3px; } }
