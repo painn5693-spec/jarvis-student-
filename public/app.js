@@ -17,6 +17,7 @@ const PAGE_META = {
   planner: ["MAKE YOUR NEXT MOVE", "Study planner", "Turn large goals into small, manageable steps."],
   focus: ["PROTECT YOUR ATTENTION", "Focus room", "Give one important task your undivided attention."],
   progress: ["CONSISTENCY OVER PERFECTION", "Your progress", "A clear view of the work you have put in."],
+  vault: ["YOUR PERSONAL KNOWLEDGE BASE", "Knowledge vault", "Capture ideas, practise active recall, and protect your study data."],
   assistant: ["YOUR AI LEARNING PARTNER", "JARVIS assistant", "Ask questions, explore ideas, and learn something new."],
 };
 
