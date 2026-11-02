@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JARVIS-Study</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">STUDENT EDITION</div>
+          <h1>JARVIS<span>-Study</span></h1>
+          <p class="subtitle">A focused AI copilot for learning, research, and carefully approved actions.</p>
+        </div>
+        <div class="status" id="status">Checking systems…</div>
+      </header>
+
+      <section class="card chat-card" aria-label="Chat with JARVIS-Study">
+        <div class="messages" id="messages"></div>
+        <div class="quick-actions" aria-label="Quick prompts">
+          <button data-prompt="Help me understand a difficult topic with an example and a mini quiz.">Explain a topic</button>
+          <button data-prompt="Search the web for three reliable sources about renewable energy for a school project.">Research mode</button>
+          <button data-prompt="Review the latest files in my GitHub repository and summarize what I should learn next.">GitHub review</button>
+        </div>
+        <form class="composer" id="composer">
+          <textarea id="prompt" rows="2" placeholder="Ask JARVIS-Study anything…" autocomplete="off"></textarea>
+          <div class="composer-actions">
+            <button class="secondary" id="mic" type="button" title="Use voice input">🎙 Voice</button>
+            <button class="primary" type="submit">Send</button>
+          </div>
+        </form>
+        <p class="notice">For safety, GitHub publishing always pauses for your confirmation. Never paste secrets into chat.</p>
+      </section>
+
+      <section class="grid">
+        <div class="card info-card">
+          <div class="card-kicker">STUDY MODE</div>
+          <h2>Learn, don’t just copy.</h2>
+          <p>JARVIS-Study is tuned to explain ideas, show worked examples, and help you check your own understanding.</p>
+        </div>
+        <div class="card info-card">
+          <div class="card-kicker">ACCESS MODEL</div>
+          <h2>Small permissions, clear approvals.</h2>
+          <p>Browser access is limited to public HTTPS hosts. GitHub uses your own token, and write actions require a second confirmation.</p>
+        </div>
+      </section>
+    </main>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
+
