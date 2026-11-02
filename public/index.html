@@ -7,6 +7,9 @@
     <meta name="description" content="JARVIS-Study is a focused AI study workspace with planning, focus sessions, progress tracking, and a permission-aware assistant." />
     <title>JARVIS-Study — Your learning workspace</title>
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/vault.css" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
   </head>
   <body>
     <div class="app-layout">
@@ -22,6 +25,7 @@
           <button class="nav-item" data-view="planner"><span class="nav-icon">▤</span><span>Study planner</span><span class="nav-count" id="navTaskCount">0</span></button>
           <button class="nav-item" data-view="focus"><span class="nav-icon">◷</span><span>Focus room</span></button>
           <button class="nav-item" data-view="progress"><span class="nav-icon">↗</span><span>Progress</span></button>
+          <button class="nav-item" data-view="vault"><span class="nav-icon">▧</span><span>Knowledge vault</span><span class="nav-count" id="navDueCount">0</span></button>
           <button class="nav-item" data-view="assistant"><span class="nav-icon">✳</span><span>JARVIS assistant</span><span class="nav-live"></span></button>
         </nav>
 
@@ -160,6 +164,62 @@
             <p class="privacy-note">Progress is calculated from sessions and tasks saved in this browser. Clearing site data will clear this history.</p>
           </section>
 
+          <section class="view" id="view-vault">
+            <div class="page-intro"><div><span class="section-kicker">YOUR PERSONAL KNOWLEDGE BASE</span><h2>Knowledge vault</h2><p>Capture useful ideas, turn them into flashcards, and review them before they fade.</p></div><span class="page-icon">▧</span></div>
+            <div class="vault-overview-grid">
+              <section class="panel weekly-goal-panel">
+                <div class="panel-heading"><div><span class="section-kicker">CONSISTENCY BUILDS MASTERY</span><h2>Weekly focus goal</h2></div><span class="goal-icon">◎</span></div>
+                <div class="goal-row"><strong id="weeklyMinutes">0 <small>min</small></strong><span id="weeklyGoalLabel">of 300 min</span></div>
+                <div class="goal-track"><div class="goal-progress" id="weeklyGoalProgress"></div></div>
+                <div class="goal-controls"><label class="field-label" for="weeklyGoalSelect">Set your weekly target</label><select id="weeklyGoalSelect"><option value="60">1 hour</option><option value="120">2 hours</option><option value="180">3 hours</option><option value="300" selected>5 hours</option><option value="450">7.5 hours</option><option value="600">10 hours</option></select></div>
+                <p class="vault-helper">Based on completed focus sessions from the last seven days.</p>
+              </section>
+              <section class="panel backup-panel">
+                <div class="panel-heading"><div><span class="section-kicker">YOUR DATA, YOUR CONTROL</span><h2>Workspace backup</h2></div><span class="backup-icon">⌁</span></div>
+                <p>Export your tasks, focus history, notes, flashcards, and settings to a JSON backup. Restore it on this browser later.</p>
+                <div class="backup-actions"><button class="button button-primary" id="exportBackup">↓ Export backup</button><label class="button button-outline" for="importBackupFile">↑ Import backup</label><input id="importBackupFile" type="file" accept="application/json,.json" hidden /></div>
+                <span class="backup-status" id="backupStatus" aria-live="polite">Backups are created locally. Nothing is uploaded.</span>
+              </section>
+            </div>
+            <div class="vault-grid">
+              <section class="panel vault-notes-panel">
+                <div class="panel-heading"><div><span class="section-kicker">CAPTURE WHAT MATTERS</span><h2>Study notes</h2></div><span class="count-chip" id="noteCount">0 notes</span></div>
+                <form id="noteForm" class="vault-form">
+                  <input id="noteTitle" maxlength="90" placeholder="Note title — e.g. Derivative rules" aria-label="Note title" required />
+                  <input id="noteSubject" maxlength="35" placeholder="Subject or tag — e.g. Mathematics" aria-label="Note subject" />
+                  <textarea id="noteBody" rows="4" maxlength="8000" placeholder="Write a definition, worked example, key idea, or question to revisit…" aria-label="Note content" required></textarea>
+                  <div class="vault-form-actions"><button class="button button-primary" id="saveNoteButton" type="submit">Save note</button><button class="button button-outline" id="cancelNoteEdit" type="button" hidden>Cancel edit</button></div>
+                </form>
+                <div class="vault-search"><input id="noteSearch" type="search" placeholder="Search your notes…" aria-label="Search notes" /></div>
+                <div id="noteList" class="note-list"></div>
+                <div id="notesEmpty" class="empty-state small-empty"><span>✧</span><strong>Your knowledge starts here.</strong><p>Save a useful explanation or a question you want to remember.</p></div>
+              </section>
+              <section class="panel vault-cards-panel">
+                <div class="panel-heading"><div><span class="section-kicker">ACTIVE RECALL</span><h2>Flashcards</h2></div><span class="count-chip" id="cardCount">0 cards</span></div>
+                <form id="cardForm" class="vault-form">
+                  <input id="cardQuestion" maxlength="180" placeholder="Front — ask yourself a question" aria-label="Flashcard question" required />
+                  <textarea id="cardAnswer" rows="3" maxlength="1500" placeholder="Back — write the answer in your own words" aria-label="Flashcard answer" required></textarea>
+                  <input id="cardSubject" maxlength="35" placeholder="Subject or topic (optional)" aria-label="Flashcard subject" />
+                  <button class="button button-primary" type="submit">＋ Create flashcard</button>
+                </form>
+                <div class="review-heading"><div><span class="section-kicker">SPACED REVIEW</span><strong>Review queue</strong></div><span class="due-chip" id="dueCount">0 due</span></div>
+                <div class="review-card" id="reviewCard">
+                  <span class="review-label" id="reviewSideLabel">QUESTION</span>
+                  <p id="reviewCardText">Create a flashcard to start building your review queue.</p>
+                  <button class="text-link" id="flipCardButton" type="button" hidden>Reveal answer</button>
+                  <div class="review-actions" id="reviewActions" hidden>
+                    <button class="review-grade again" data-grade="again" type="button">Again <small>1 day</small></button>
+                    <button class="review-grade good" data-grade="good" type="button">Good <small>Next interval</small></button>
+                    <button class="review-grade easy" data-grade="easy" type="button">Easy <small>Longer interval</small></button>
+                  </div>
+                </div>
+                <div id="flashcardList" class="flashcard-list"></div>
+                <div id="cardsEmpty" class="empty-state small-empty"><span>✧</span><strong>No flashcards yet.</strong><p>Create a question and answer, then practise active recall.</p></div>
+                <p class="vault-helper">Intervals are scheduled locally (1, 3, 7, 14 and 30 days). This is a lightweight review aid, not a clinical or guaranteed memory model.</p>
+              </section>
+            </div>
+          </section>
+
           <section class="view" id="view-assistant">
             <div class="page-intro"><div><span class="section-kicker">YOUR AI LEARNING PARTNER</span><h2>JARVIS assistant</h2><p>Ask questions, explore ideas, research topics, or inspect a GitHub project.</p></div><span class="page-icon">✳</span></div>
             <section class="panel chat-panel" aria-label="Chat with JARVIS-Study">
@@ -184,5 +244,6 @@
       </div>
     </div>
     <script src="/app.js" type="module"></script>
+    <script src="/vault.js" type="module"></script>
   </body>
 </html>
