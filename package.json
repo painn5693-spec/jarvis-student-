@@ -1,0 +1,17 @@
+{
+  "name": "jarvis-student",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A local, permission-aware Jarvis-style study assistant for students.",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "dev": "node --watch src/server.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "openai": "^6.9.0"
+  }
+}
+
